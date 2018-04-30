@@ -1,4 +1,4 @@
-#include "combination.h"
+﻿#include "combination.h"
 #include <conio.h>
 
 int main()
