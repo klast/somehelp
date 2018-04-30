@@ -1,0 +1,15 @@
+*.suo
+*.db
+*.tlog
+*.ipch
+*.opendb
+*.obj
+*.exe
+*.ilk
+*.ipdb
+*.log
+*.pdb
+*.vcxproj
+*.idb
+*.filters
+*.iobj
