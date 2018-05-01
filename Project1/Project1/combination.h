@@ -67,5 +67,11 @@ private:
 
 	// очищаем память
 	void clear();
+
+	// проверяем количество последовательностей
+	bool check_count();
+
+	// проверяем последовательность с номером item
+	bool check_combination(int item);
 };
 

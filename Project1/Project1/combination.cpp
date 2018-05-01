@@ -5,6 +5,7 @@
 #include <chrono>
 #include <ctime>
 #include <iomanip>
+#include <conio.h>
 #include <functional>
 
 //конструктор с параметрами, задаем сохранение и печать по умолчанию true
@@ -53,7 +54,14 @@ void combination::run()
 			save_and_print();
 		else
 			break;
-	}	
+	}
+
+	if (!check_count())
+	{
+		std::cerr << "ERROR! Counts do not match!" << std::endl;
+		_getch();
+		exit(1);
+	}
 }
 
 // сохраняем и выводим текущую последовательность (если надо)
@@ -122,4 +130,19 @@ void combination::timer()
 		<< "Wall clock time passed: "
 		<< std::chrono::duration<double, std::milli>(time_end - time_start).count()
 		<< " ms\n";
+}
+
+// проверяем количество последовательностей
+bool combination::check_count()
+{
+	if (count == true_count)
+		return true;
+	else
+		return false;
+}
+
+// проверяем последовательность с номером item
+bool combination::check_combination(int item)
+{
+	return true;
 }
