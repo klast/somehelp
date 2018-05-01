@@ -5,6 +5,7 @@
 #include <chrono>
 #include <ctime>
 #include <iomanip>
+#include <functional>
 
 //конструктор с параметрами, задаем сохранение и печать по умолчанию true
 combination::combination(int _n, int _k):saveFlag(true),printFlag(true)
@@ -12,6 +13,15 @@ combination::combination(int _n, int _k):saveFlag(true),printFlag(true)
 	n = _n;
 	k = _k;
 	count = 0;
+
+	// numbers - вектор от 1 до n, factorials - факториалы от numbers
+	std::vector<int> numbers(n), factorials(n);
+	// генерируем numbers от 1 до n
+	std::iota(numbers.begin(), numbers.end(), 1);
+	//генерируем факториалы
+	std::partial_sum(numbers.begin(), numbers.end(), factorials.begin(), std::multiplies<int>());
+	// посчитаем количество сочетаний n! / (n-k)! k!  ( помним, что нумерация с 0, так что везде минус 1)
+	true_count = factorials[n-1] / (factorials[n-k-1] * factorials[k-1]);
 }
 
 combination::~combination()
@@ -39,11 +49,11 @@ void combination::run()
 	while (true)
 	{
 		bool is_generated = generate_next();
-		save_and_print();
-		if (!is_generated)
+		if (is_generated)
+			save_and_print();
+		else
 			break;
-	}
-	
+	}	
 }
 
 // сохраняем и выводим текущую последовательность (если надо)
@@ -93,19 +103,14 @@ bool combination::generate_next()
 }
 
 // функция расчета с таймером
-void combination::run_and_timer()
+void combination::timer()
 {
 	// начало отмера времени
 	std::clock_t clock_start = std::clock();
 	auto time_start = std::chrono::high_resolution_clock::now();
 
-	generate_first();
-	while (true)
-	{
-		bool is_generated = generate_next();
-		if (!is_generated)
-			break;
-	}
+	// расчет
+	run();
 
 	// конец отмера времени
 	std::clock_t clock_end = std::clock();

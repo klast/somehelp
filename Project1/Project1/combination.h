@@ -21,6 +21,9 @@ private:
 	// количество последовательностей
 	int count;
 
+	// правильное количество последовательностей
+	int true_count;
+
 	// последовательности ( если надо сохран¤ть )
 	std::vector<std::vector<int>> data;
 
@@ -40,16 +43,16 @@ public:
 	~combination();
 
 	// задание флага сохранени¤
-	inline bool set_saveFlag(bool param) { saveFlag = param; }
+	inline void set_saveFlag(bool param) { saveFlag = param; }
 
 	// задание флага печати
-	inline bool set_printFlag(bool param) { printFlag = param; }
+	inline void set_printFlag(bool param) { printFlag = param; }
 
 	// функци¤ расчета
 	void run();
 
 	// функция расчета с таймером
-	void run_and_timer();
+	void timer();
 
 private:
 
