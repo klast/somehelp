@@ -9,14 +9,20 @@
 #include <functional>
 
 //конструктор с параметрами, задаем сохранение и печать по умолчанию true
-combination::combination(int _m, int _n):saveFlag(true),printFlag(true)
+combination::combination(int _n, int _k):saveFlag(true),printFlag(true)
 {
-	m = _m;
 	n = _n;
+	k = _k;
 	count = 0;
 
-	// рекурсивный расчет числа разбиений
-	true_count = calculate_count(m, n, m);
+	// numbers - вектор от 1 до n, factorials - факториалы от numbers
+	std::vector<int> numbers(n), factorials(n);
+	// генерируем numbers от 1 до n
+	std::iota(numbers.begin(), numbers.end(), 1);
+	//генерируем факториалы
+	std::partial_sum(numbers.begin(), numbers.end(), factorials.begin(), std::multiplies<int>());
+	// посчитаем количество сочетаний n! / (n-k)! k!  ( помним, что нумерация с 0, так что везде минус 1)
+	true_count = factorials[n-1] / (factorials[n-k-1] * factorials[k-1]);
 }
 
 combination::~combination()
@@ -31,39 +37,50 @@ void combination::clear()
 	data.clear();
 }
 
-// генерируем разбиение
-void combination::generate(int sum, int num, int val)
+//генерируем последовательность
+void combination::generate(int num, int val)
 {
-	if (num == 1)
+	// если нельзя сделать шаг
+	if (num > k or val > n)
 	{
-		current[n - 1] = sum;
-		for (int i = 1; i < n; i++)
-		{
-			if (current[i] < current[i - 1])
-				return;
-		}
+		return;
+	}
+	int tmp;
+	//если надо сохранить значение шага
+	if (num >= 0)
+	{
+		tmp = current[num];
+		current[num] = val;
+	}
+	//если пора печатать последовательность
+	if (num == k - 1)
+	{
 		save_and_print();
 		count++;
 		return;
 	}
-	else
+	// поставим генерироваться на следующей позиции
+	for (int value = val + 1; value <= n; value++)
 	{
-		for (int i = val; i < sum; i++)
-		{
-			current[n - num] = i;
-			generate(sum - i, num - 1, i);
-		}
+		generate(num + 1, value);
 	}
+	// возвращаем предыдущее значение
+	if (num >= 0)
+	{
+		current[num] = tmp;
+	}
+	
 }
 
 void combination::run()
 {
 	// очистим последовательности
 	clear();
-	current.resize(n);
+	current.resize(k);
 	count = 0;
-	
-	generate(m, n, 1);
+
+	// сгенерируем первую последовательность
+	generate(-1, 0);
 
 	if (!check_count())
 	{
@@ -116,31 +133,10 @@ void combination::timer()
 // проверяем количество последовательностей
 bool combination::check_count()
 {
-#ifdef _DEBUG
-	std::cout << "true_count = " << true_count << std::endl;
-	std::cout << "count = " << count << std::endl;
-#endif
 	if (count == true_count)
 		return true;
 	else
 		return false;
-}
-
-// функция для расчета количества разбиений
-int combination::calculate_count(int n, int m, int k)
-{
-	if ((n >= m) and (m > 0) /*and (n >= k)*/ and (k > 0))
-	{
-		return calculate_count(n, m, k - 1) + calculate_count(n - k, m - 1, k);
-	}
-	else if ((n == 0) and (m == 0))
-	{
-		return 1;
-	}
-	else
-	{
-		return 0;
-	}
 }
 
 // проверяем последовательность с номером item
