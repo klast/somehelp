@@ -3,7 +3,7 @@
 
 int main()
 {
-	combination comb(10, 3);
+	combination comb(10, 6);
 	comb.run();
 
 	comb.set_printFlag(false);

@@ -10,7 +10,7 @@ class combination
 private:
 
 	// параметры последовательности
-	int n, k;
+	int m, n;
 
 	// флаг печати
 	bool printFlag;
@@ -37,7 +37,7 @@ private:
 public:
 
 	// конструктор
-	combination(int _n, int _k);
+	combination(int _m, int _n);
 
 	// деструктор
 	~combination();
@@ -70,5 +70,8 @@ private:
 
 	// проверяем последовательность с номером item
 	bool check_combination(int item);
+
+	// функция для расчета количества разбиений
+	int calculate_count(int m, int n, int k);
 };
 
